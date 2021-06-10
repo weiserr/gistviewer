@@ -1,0 +1,25 @@
+<style>
+  body {
+    margin: 0;
+  }
+  iframe {
+    display: block;
+    border: none;
+    height: 100vh;
+    width: 100vw;
+  }
+</style>
+<script>
+  (async function () {
+    const gistId = new URLSearchParams(window.location.search).get('id');
+    const gistInformation = await (await fetch(`https://api.github.com/gists/${gistId}`)).json();
+    const html = await (await fetch(gistInformation.files['index.html'].raw_url)).text();
+
+    const iframe = document.createElement('iframe');
+    document.body.appendChild(iframe);
+    iframe.sandbox = '';
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(html);
+    iframe.contentWindow.document.close();
+  })();
+</script>
