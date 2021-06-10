@@ -13,7 +13,8 @@
   (async function () {
     const gistId = new URLSearchParams(window.location.search).get('id');
     const gistInformation = await (await fetch(`https://api.github.com/gists/${gistId}`)).json();
-    const html = await (await fetch(gistInformation.files['index.html'].raw_url)).text();
+    const rawUrl = Object.values(gistInformation.files).filter(file => file.type === 'text/html')[0].raw_url
+    const html = await (await fetch(rawUrl)).text();
 
     const iframe = document.createElement('iframe');
     document.body.appendChild(iframe);
